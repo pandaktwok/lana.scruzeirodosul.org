@@ -1164,132 +1164,7 @@ function CreativePricing({ p }) {
   );
 }
 
-// ──────────────────────────────────────────────────────────────
-// Media / clipping
-// ──────────────────────────────────────────────────────────────
-function Media({ p }) {
-  const [noticias, setNoticias] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
 
-  // Real news articles about the project to use as a high-quality fallback
-  const fallbackClips = [
-    { 
-      title: "Projeto CRIAR lança livro infantil sobre cyberbullying em Criciúma", 
-      pubDate: new Date("2024-11-22T12:00:00Z").toISOString(), 
-      link: "https://www.engeplus.com.br/noticia/educacao/2024/projeto-criar-lanca-livro-infantil-sobre-cyberbullying-em-criciuma" 
-    },
-    { 
-      title: "Projeto Criar lança livro infantil sobre cyberbullying com apoio da UNESC", 
-      pubDate: new Date("2024-11-24T12:00:00Z").toISOString(), 
-      link: "https://www.unesc.net/portal/blog/post/projeto-criar-lanca-livro-infantil-sobre-cyberbullying-com-apoio-da-unesc" 
-    },
-    { 
-      title: "Projeto Criar lança livro infantil sobre cyberbullying em parceria com a DPCAMI", 
-      pubDate: new Date("2024-11-20T12:00:00Z").toISOString(), 
-      link: "https://sulnoticias.com/noticia/projeto-criar-lanca-livro-infantil-sobre-cyberbullying/1973" 
-    },
-  ];
-
-  useEffect(() => {
-    // Links encoded to prevent 422 Unprocessable Entity errors in API parsers
-    const linksDosFeeds = [
-      'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fengeplus.com.br%2Fsearch%2Fprojeto%2Blana%2Ffeed%2F&api_key=zousgegbydkr5dr8oya6ka4z9hswtafipetyqlwt',
-      'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.4oito.com.br%2Fsearch%2Fprojeto%2Blana%2Ffeed%2F&api_key=zousgegbydkr5dr8oya6ka4z9hswtafipetyqlwt',
-      'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fndmais.com.br%2Fsearch%2Fsociedade%2Bcultural%2Bcruzeiro%2Bdo%2Bsul%2Ffeed%2F&api_key=zousgegbydkr5dr8oya6ka4z9hswtafipetyqlwt'
-    ];
-
-    Promise.all(
-      linksDosFeeds.map(url => 
-        fetch(url)
-          .then(resposta => {
-            if (!resposta.ok) throw new Error("Erro de rede");
-            return resposta.json();
-          })
-      )
-    )
-      .then(resultados => {
-        let todasAsNoticias = [];
-
-        resultados.forEach(feed => {
-          if (feed.status === 'ok' && feed.items) {
-            todasAsNoticias = todasAsNoticias.concat(feed.items);
-          }
-        });
-
-        if (todasAsNoticias.length > 0) {
-          // Ordena da notícia mais nova para a mais velha
-          todasAsNoticias.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-          setNoticias(todasAsNoticias.slice(0, 6));
-        } else {
-          setNoticias(fallbackClips);
-        }
-        setLoading(false);
-      })
-      .catch(erro => {
-        console.error('Erro ao buscar os feeds RSS:', erro);
-        setError(true);
-        setNoticias(fallbackClips);
-        setLoading(false);
-      });
-  }, []);
-
-  const getSourceTag = (link) => {
-    if (link.includes("engeplus")) return "Engeplus";
-    if (link.includes("4oito")) return "Portal 4oito";
-    if (link.includes("ndmais")) return "ND Mais";
-    if (link.includes("sulnoticias")) return "Sul Notícias";
-    if (link.includes("unesc")) return "Portal UNESC";
-    return "Notícia";
-  };
-
-  return (
-    <section className="media" style={{ background: p.cream }}>
-      <div className="media-inner">
-        <div className="media-head">
-          <span className="eyebrow" style={{ color: p.accent }}>Na mídia</span>
-          <h2 style={{ color: p.ink }}>Falaram sobre a gente.</h2>
-        </div>
-        
-        {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <span className="font-fredoka text-lg animate-pulse" style={{ color: p.deep }}>
-              Carregando notícias da mídia regional...
-            </span>
-          </div>
-        ) : (
-          <ul className="media-list" id="feed-noticias">
-            {noticias.map((c, i) => {
-              const dataFormatada = new Date(c.pubDate).toLocaleDateString('pt-BR');
-              return (
-                <li key={i} className="media-row" style={{ borderColor: `${p.ink}1A` }}>
-                  <span className="media-tag" style={{ background: p.bg, color: p.deep }}>
-                    {getSourceTag(c.link)}
-                  </span>
-                  <span className="media-title" style={{ color: p.ink }}>
-                    {c.title}
-                  </span>
-                  <span className="media-date" style={{ color: `${p.ink}80` }}>
-                    {dataFormatada}
-                  </span>
-                  <a 
-                    className="media-link hover:underline" 
-                    style={{ color: p.accent }} 
-                    href={c.link} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                  >
-                    Ler →
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </div>
-    </section>
-  );
-}
 
 function Footer({ p }) {
   const currentYear = new Date().getFullYear();
@@ -1494,7 +1369,6 @@ function App() {
       <Autor p={p} />
       <Gallery p={p} />
       <CreativePricing p={p} />
-      <Media p={p} />
       <Footer p={p} />
 
       <TweaksPanel>
