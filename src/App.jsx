@@ -1,5 +1,13 @@
-/* global React, ReactDOM, useTweaks, TweaksPanel, TweakSection, TweakColor, TweakRadio, TweakToggle, TweakSlider */
-const { useState, useEffect, useRef } = React;
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  useTweaks,
+  TweaksPanel,
+  TweakSection,
+  TweakColor,
+  TweakRadio,
+  TweakToggle,
+  TweakSlider,
+} from './tweaks-panel';
 
 // ──────────────────────────────────────────────────────────────
 // SVG Icons (replacements for lucide-react)
@@ -1542,4 +1550,4 @@ function App() {
   );
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+export default App;
