@@ -828,16 +828,11 @@ function Gallery({ p }) {
               key={i}
               className={`gallery-tile ${t.tall ? "tile-tall" : ""}`}
               style={{
-                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.75)), url(${t.url})`,
+                backgroundImage: `url(${t.url})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
-                color: "#FFFFFF",
               }}
-            >
-              <div className="tile-label" style={{ marginTop: "auto", fontWeight: "700", textShadow: "0 2px 4px rgba(0,0,0,0.6)" }}>
-                {t.label}
-              </div>
-            </div>
+            />
           ))}
         </div>
       </div>
